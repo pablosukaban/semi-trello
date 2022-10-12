@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, ReactElement } from 'react';
+import { TitleComponent } from './TitleComponent';
 import { v4 as uuidv4 } from 'uuid';
 
 type TaskType = {
     id: string;
     value: string;
+};
+
+const columnGenerator = () => {
+    return { id: uuidv4(), element: <Column /> };
 };
 
 const Column = () => {
@@ -28,7 +33,7 @@ const Column = () => {
                 'flex flex-col justify-center items-center  border-2 rounded max-w-[220px] overflow-x-hidden '
             }
         >
-            <h1>Title</h1>
+            <TitleComponent title={'My Title '} />
             <textarea
                 placeholder={'Добавьте задачу!'}
                 wrap={'soft'}
@@ -51,7 +56,7 @@ const Column = () => {
                         key={item.id}
                     >
                         <div>{item.value}</div>
-                        <div>but</div>
+                        <div className={'self-end'}>but</div>
                     </div>
                 ))}
             </div>
@@ -60,12 +65,34 @@ const Column = () => {
 };
 
 const Board = () => {
+    const [columnsArray, setColumnsArray] = useState<
+        { id: string; element: ReactElement }[]
+    >(() => {
+        return new Array(5).fill(0).map((item) => columnGenerator());
+    });
+
+    const handleAddColumn = () => {
+        setColumnsArray((prevState) => [...prevState, columnGenerator()]);
+    };
+
+    const handleRemoveColumn = () => {
+        const withoutLast = columnsArray.filter(
+            (item) => columnsArray.indexOf(item) !== columnsArray.length - 1
+        );
+        setColumnsArray(withoutLast)
+    };
+
     return (
-        <div className={'flex justify-center items-start'}>
-            <Column />
-            <Column />
-            <Column />
-            <Column />
+        <div className={'flex flex-col justify-center items-start'}>
+            <button onClick={handleAddColumn}>Add</button>
+            <button onClick={handleRemoveColumn}>Remove</button>
+            <div className={'flex justify-center items-start'}>
+                {columnsArray.map((item) => (
+                    <React.Fragment key={item.id}>
+                        {item.element}
+                    </React.Fragment>
+                ))}
+            </div>
         </div>
     );
 };
