@@ -17,7 +17,7 @@ const Board = () => {
         <div className={'flex flex-col justify-start items-start'}>
             <button onClick={handleAddColumn}>Add</button>
             <button onClick={handleRemoveColumn}>Remove</button>
-            <div className={'flex justify-start items-start'}>
+            <div className={'flex gap-1 justify-start items-start'}>
                 {columnsArray.map((item) => (
                     <Column
                         key={item.id}

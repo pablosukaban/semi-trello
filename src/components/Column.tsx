@@ -16,11 +16,7 @@ type ColumnProps = {
 };
 
 export const Column: React.FC<ColumnProps> = ({ columnItem, dispatch }) => {
-    const [task, setTask] = useState<TaskType>({
-        id: uuidv4(),
-        value: '',
-        done: false,
-    });
+    const [task, setTask] = useState('');
 
     // const [currentTask, setCurrentTask] = useState<TaskType>({
     //     id: uuidv4(),
@@ -29,7 +25,7 @@ export const Column: React.FC<ColumnProps> = ({ columnItem, dispatch }) => {
     // });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setTask((prevState) => ({ ...prevState, value: e.target.value }));
+        setTask(e.target.value);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -38,9 +34,13 @@ export const Column: React.FC<ColumnProps> = ({ columnItem, dispatch }) => {
             dispatch({
                 type: BoardActions.TASK_ADDED,
                 columnId: columnItem.id,
-                newTask: task,
+                newTask: {
+                    id: uuidv4(),
+                    done: false,
+                    value: task,
+                },
             });
-            setTask({ id: uuidv4(), value: '', done: false });
+            setTask('');
         }
     };
 
@@ -68,7 +68,7 @@ export const Column: React.FC<ColumnProps> = ({ columnItem, dispatch }) => {
                 rows={1}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
-                value={task.value}
+                value={task}
             />
             <TaskListComponent columnItem={columnItem} dispatch={dispatch} />
         </div>
