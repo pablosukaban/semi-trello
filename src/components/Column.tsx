@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { TitleComponent } from './TitleComponent';
-import { TaskComponent } from './TaskComponent';
 import { BoardActions, BoardActionTypes, BoardType } from '../taskReducer';
+import { TaskListComponent } from './TaskListComponent';
 
 export type TaskType = {
     id: string;
@@ -22,6 +22,12 @@ export const Column: React.FC<ColumnProps> = ({ columnItem, dispatch }) => {
         done: false,
     });
 
+    // const [currentTask, setCurrentTask] = useState<TaskType>({
+    //     id: uuidv4(),
+    //     value: '',
+    //     done: false,
+    // });
+
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setTask((prevState) => ({ ...prevState, value: e.target.value }));
     };
@@ -38,13 +44,15 @@ export const Column: React.FC<ColumnProps> = ({ columnItem, dispatch }) => {
         }
     };
 
-    const handleTaskSetDone = (id: string) => {
-        dispatch({
-            type: BoardActions.TASK_FINISHED,
-            taskId: id,
-            columnId: columnItem.id,
-        });
-    };
+    // const handleDragStart = (id: string) => {
+    //     const foundTask = columnItem.itemsList.find((item) => item.id === id);
+    //     if (!foundTask) return;
+    //     setCurrentTask(foundTask);
+    // };
+    //
+    // const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    //     e.preventDefault();
+    // };
 
     return (
         <div
@@ -52,7 +60,7 @@ export const Column: React.FC<ColumnProps> = ({ columnItem, dispatch }) => {
                 'flex-shrink-0 flex flex-col justify-center items-center  border-2 rounded'
             }
         >
-            <TitleComponent title={'My Title '} />
+            <TitleComponent title={columnItem.title} />
             <textarea
                 placeholder={'Добавьте задачу!'}
                 wrap={'soft'}
@@ -62,15 +70,7 @@ export const Column: React.FC<ColumnProps> = ({ columnItem, dispatch }) => {
                 onKeyDown={handleKeyDown}
                 value={task.value}
             />
-            <div className={'flex flex-col justify-center items-center w-full'}>
-                {columnItem.itemsList.map((item) => (
-                    <TaskComponent
-                        key={item.id}
-                        task={item}
-                        handleSetDone={() => handleTaskSetDone(item.id)}
-                    />
-                ))}
-            </div>
+            <TaskListComponent columnItem={columnItem} dispatch={dispatch} />
         </div>
     );
 };
