@@ -1,47 +1,58 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
+type TaskType = {
+    id: string;
+    value: string;
+};
 
 const Column = () => {
-    const [task, setTask] = useState('');
-    const [tasksArray, setTasksArray] = useState<string[]>([
-        'Задача 1',
-        'Задача 2',
-        'Задача 3',
-        'Задача 4',
-        'Задача 5',
-    ]);
+    const [task, setTask] = useState<TaskType>({ id: uuidv4(), value: '' });
+    const [tasksArray, setTasksArray] = useState<TaskType[]>([]);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setTask(e.target.value);
+    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setTask((prevState) => ({ ...prevState, value: e.target.value }));
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.code === 'Enter') {
+            e.preventDefault();
             setTasksArray((prevState) => [...prevState, task]);
-            setTask('');
+            setTask({ id: uuidv4(), value: '' });
         }
     };
 
     return (
         <div
             className={
-                'flex flex-col justify-center items-center border-2 rounded '
+                'flex flex-col justify-center items-center  border-2 rounded max-w-[220px] overflow-x-hidden '
             }
         >
             <h1>Title</h1>
-            <input
+            <textarea
+                placeholder={'Добавьте задачу!'}
+                wrap={'soft'}
+                className={'w-full p-2 border rounded break-words resize-none'}
+                rows={1}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
-                placeholder={'Добавьте задачу!'}
-                className={'w-full'}
-                value={task}
+                value={task.value}
             />
             <div
                 className={
-                    'flex flex-col justify-center items-center overflow-y-scroll w-full'
+                    'flex flex-col justify-center items-center w-full overflow-y-auto'
                 }
             >
                 {tasksArray.map((item) => (
-                    <div key={item}>{item}</div>
+                    <div
+                        className={
+                            'border rounded w-full pl-2 pr-4 py-2 flex justify-between items-start '
+                        }
+                        key={item.id}
+                    >
+                        <div>{item.value}</div>
+                        <div>but</div>
+                    </div>
                 ))}
             </div>
         </div>
@@ -50,7 +61,10 @@ const Column = () => {
 
 const Board = () => {
     return (
-        <div>
+        <div className={'flex justify-center items-start'}>
+            <Column />
+            <Column />
+            <Column />
             <Column />
         </div>
     );
