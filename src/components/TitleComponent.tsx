@@ -1,15 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { BoardActions, BoardActionTypes } from '../taskReducer';
 
-export const TitleComponent = React.memo(function TitleComponent({
-    title,
-}: {
+type TitleComponentProps = {
     title: string;
-}) {
-    const [localTitle, setLocalTitle] = useState(title);
-    // const [redactor, setRedactor] = useState<Redactor>({
-    //     value: '',
-    //     visible: false,
-    // });
+    columnId: string;
+    dispatch: (action: BoardActionTypes) => void;
+};
+
+export const TitleComponent: React.FC<TitleComponentProps> = ({
+    title,
+    dispatch,
+    columnId,
+}) => {
     const [redactor, setRedactor] = useState('');
     const [visible, setVisible] = useState(false);
 
@@ -23,21 +25,21 @@ export const TitleComponent = React.memo(function TitleComponent({
     }, [visible]);
 
     const handleDoubleClick = () => {
-        // setRedactor((prevState) => ({ ...prevState, visible: true }));
         setVisible(true);
     };
 
     const handleRedactorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // setRedactor((prevState) => ({ ...prevState, value: e.target.value }));
         setRedactor(e.target.value);
     };
 
     const handleRedactorSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (!redactor) return;
         if (e.code === 'Enter') {
-            // setLocalTitle(redactor.value);
-            // setRedactor({ value: '', visible: false });
-            setLocalTitle(redactor);
+            if (!redactor) return;
+            dispatch({
+                type: BoardActions.TITLE_CHANGED,
+                title: redactor,
+                columnId: columnId,
+            });
             setVisible(false);
             setRedactor('');
         }
@@ -51,6 +53,9 @@ export const TitleComponent = React.memo(function TitleComponent({
         setRedactor('');
         setVisible(false);
     };
+
+
+    // console.log('render in title component')
 
     return (
         <>
@@ -71,9 +76,9 @@ export const TitleComponent = React.memo(function TitleComponent({
                     }
                     onDoubleClick={handleDoubleClick}
                 >
-                    {localTitle}
+                    {title}
                 </h1>
             )}
         </>
     );
-});
+};
