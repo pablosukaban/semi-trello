@@ -2,10 +2,13 @@ import React from 'react';
 import Board from './components/Board';
 
 const App = () => {
-    // TODO: Менять титл, завершать задачу, менять задачу, драгдроп
+    // DONE: Менять титл, завершать задачу, добавлять/удалять столбцы
+    // TODO: Подробная инфа задачи, менять задачу, драгдроп, ограничить по ширине высоте, удалить конкретный столбец
     return (
-        <div className={'min-h-screen flex justify-center items-center'}>
-            <Board />
+        <div className={'max-w-[1000px] mx-auto '}>
+            <div className={'min-h-screen flex justify-center items-center'}>
+                <Board />
+            </div>
         </div>
     );
 };

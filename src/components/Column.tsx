@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { TitleComponent } from './TitleComponent';
 import { TaskComponent } from './TaskComponent';
+import { BoardActions, BoardActionTypes, BoardType } from '../taskReducer';
 
 export type TaskType = {
     id: string;
@@ -9,13 +10,17 @@ export type TaskType = {
     done: boolean;
 };
 
-export const Column = () => {
+type ColumnProps = {
+    columnItem: BoardType;
+    dispatch: (action: BoardActionTypes) => void;
+};
+
+export const Column: React.FC<ColumnProps> = ({ columnItem, dispatch }) => {
     const [task, setTask] = useState<TaskType>({
         id: uuidv4(),
         value: '',
         done: false,
     });
-    const [tasksArray, setTasksArray] = useState<TaskType[]>([]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setTask((prevState) => ({ ...prevState, value: e.target.value }));
@@ -24,18 +29,21 @@ export const Column = () => {
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.code === 'Enter') {
             e.preventDefault();
-            setTasksArray((prevState) => [...prevState, task]);
+            dispatch({
+                type: BoardActions.TASK_ADDED,
+                columnId: columnItem.id,
+                newTask: task,
+            });
             setTask({ id: uuidv4(), value: '', done: false });
         }
     };
 
     const handleTaskSetDone = (id: string) => {
-        console.log(id);
-        const changedArray = tasksArray.map((item) => {
-            if (item.id !== id) return item;
-            return { ...item, done: !item.done };
+        dispatch({
+            type: BoardActions.TASK_FINISHED,
+            taskId: id,
+            columnId: columnItem.id,
         });
-        setTasksArray(changedArray);
     };
 
     return (
@@ -55,7 +63,7 @@ export const Column = () => {
                 value={task.value}
             />
             <div className={'flex flex-col justify-center items-center w-full'}>
-                {tasksArray.map((item) => (
+                {columnItem.itemsList.map((item) => (
                     <TaskComponent
                         key={item.id}
                         task={item}
