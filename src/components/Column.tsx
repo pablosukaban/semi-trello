@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { TitleComponent } from './TitleComponent';
-import { BoardActions, BoardActionTypes, BoardType } from '../taskReducer';
+import { BoardActions, BoardActionTypes, ColumnType } from '../taskReducer';
 import { TaskListComponent } from './TaskListComponent';
+import { InputComponent } from './InputComponent';
 
 export type TaskType = {
     id: string;
@@ -11,18 +12,12 @@ export type TaskType = {
 };
 
 type ColumnProps = {
-    columnItem: BoardType;
+    columnItem: ColumnType;
     dispatch: (action: BoardActionTypes) => void;
 };
 
 export const Column: React.FC<ColumnProps> = ({ columnItem, dispatch }) => {
     const [task, setTask] = useState('');
-
-    // const [currentTask, setCurrentTask] = useState<TaskType>({
-    //     id: uuidv4(),
-    //     value: '',
-    //     done: false,
-    // });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setTask(e.target.value);
@@ -44,31 +39,21 @@ export const Column: React.FC<ColumnProps> = ({ columnItem, dispatch }) => {
         }
     };
 
-    // const handleDragStart = (id: string) => {
-    //     const foundTask = columnItem.itemsList.find((item) => item.id === id);
-    //     if (!foundTask) return;
-    //     setCurrentTask(foundTask);
-    // };
-    //
-    // const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    //     e.preventDefault();
-    // };
-
     return (
         <div
             className={
                 'flex-shrink-0 flex flex-col justify-center items-center  border-2 rounded'
             }
         >
-            <TitleComponent title={columnItem.title} />
-            <textarea
-                placeholder={'Добавьте задачу!'}
-                wrap={'soft'}
-                className={'w-full p-2 border rounded break-words resize-none'}
-                rows={1}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
+            <TitleComponent
+                title={columnItem.title}
+                columnId={columnItem.id}
+                dispatch={dispatch}
+            />
+            <InputComponent
                 value={task}
+                handleInputChange={handleInputChange}
+                handleKeyDown={handleKeyDown}
             />
             <TaskListComponent columnItem={columnItem} dispatch={dispatch} />
         </div>
