@@ -29,6 +29,7 @@ export const TitleComponent = ({ title }: { title: string }) => {
     };
 
     const handleRedactorSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (!redactor) return;
         if (e.code === 'Enter') {
             // setLocalTitle(redactor.value);
             // setRedactor({ value: '', visible: false });
@@ -42,13 +43,19 @@ export const TitleComponent = ({ title }: { title: string }) => {
         }
     };
 
+    const handleRedactorBlur = () => {
+        setRedactor('');
+        setVisible(false);
+    };
+
     return (
         <>
             {visible ? (
                 <input
+                    onBlur={handleRedactorBlur}
                     value={redactor}
                     onChange={handleRedactorChange}
-                    className={'p-2 leading-tight'}
+                    className={'p-2 mb-0.5 leading-tight'}
                     placeholder={'Введите заголовок'}
                     onKeyDown={handleRedactorSubmit}
                     ref={redactorRef}
@@ -56,7 +63,7 @@ export const TitleComponent = ({ title }: { title: string }) => {
             ) : (
                 <h1
                     className={
-                        'p-2 font-bold text-lg capitalize w-full leading-tight'
+                        'p-2 font-bold text-lg capitalize w-full leading-tight cursor-pointer'
                     }
                     onDoubleClick={handleDoubleClick}
                 >
