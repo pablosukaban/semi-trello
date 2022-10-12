@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-export const TitleComponent = ({ title }: { title: string }) => {
+export const TitleComponent = React.memo(function TitleComponent({
+    title,
+}: {
+    title: string;
+}) {
     const [localTitle, setLocalTitle] = useState(title);
     // const [redactor, setRedactor] = useState<Redactor>({
     //     value: '',
@@ -72,4 +76,4 @@ export const TitleComponent = ({ title }: { title: string }) => {
             )}
         </>
     );
-};
+});
