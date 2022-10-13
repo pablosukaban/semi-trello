@@ -16,7 +16,10 @@ type ColumnProps = {
     dispatch: (action: BoardActionTypes) => void;
 };
 
-export const Column: React.FC<ColumnProps> = ({ columnItem, dispatch }) => {
+export const Column: React.FC<ColumnProps> = ({
+    columnItem,
+    dispatch,
+}) => {
     const [task, setTask] = useState('');
 
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -55,7 +58,10 @@ export const Column: React.FC<ColumnProps> = ({ columnItem, dispatch }) => {
                 handleInputChange={handleInputChange}
                 handleKeyDown={handleKeyDown}
             />
-            <TaskListComponent columnItem={columnItem} dispatch={dispatch} />
+            <TaskListComponent
+                columnItem={columnItem}
+                dispatch={dispatch}
+            />
         </div>
     );
 };

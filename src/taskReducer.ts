@@ -13,7 +13,7 @@ export enum BoardActions {
     TASK_ADDED = 'task_added',
     TASK_FINISHED = 'task_finished',
     TITLE_CHANGED = 'title_changed',
-    TASK_REORDERED = 'task_reordered',
+    DRAG_DROP = 'drag_start',
 }
 
 type AddBoardAction = {
@@ -36,18 +36,20 @@ type FinishTaskAction = {
     taskId: string;
 };
 
-type TaskReorderedAction = {
-    type: BoardActions.TASK_REORDERED;
-    column: ColumnType;
-    currentColumn: ColumnType;
-    task: TaskType;
-    currentTask: TaskType;
-};
-
 type ChangeTitleAction = {
     type: BoardActions.TITLE_CHANGED;
     title: string;
     columnId: string;
+};
+
+type DragStartAction = {
+    type: BoardActions.DRAG_DROP;
+    taskId: string;
+    columnId: string;
+    currentColumn: ColumnType;
+    currentTask: TaskType;
+    column: ColumnType;
+    task: TaskType;
 };
 
 export type BoardActionTypes =
@@ -55,8 +57,8 @@ export type BoardActionTypes =
     | RemoveBoardAction
     | AddTaskAction
     | FinishTaskAction
-    | TaskReorderedAction
-    | ChangeTitleAction;
+    | ChangeTitleAction
+    | DragStartAction;
 
 export const initialTasks: ColumnType[] = [
     {
@@ -66,15 +68,18 @@ export const initialTasks: ColumnType[] = [
             { id: uuidv4(), value: 'Task 1', done: false },
             { id: uuidv4(), value: 'Task 2', done: false },
             { id: uuidv4(), value: 'Task 3', done: false },
+            { id: uuidv4(), value: 'Task 4', done: false },
+            { id: uuidv4(), value: 'Task 5', done: false },
+            { id: uuidv4(), value: 'Task 6', done: false },
         ],
     },
     {
         id: uuidv4(),
         title: 'Доска № 2',
         itemsList: [
-            { id: uuidv4(), value: 'Task 4', done: false },
-            { id: uuidv4(), value: 'Task 5', done: false },
-            { id: uuidv4(), value: 'Task 6', done: false },
+            { id: uuidv4(), value: 'Task 7', done: false },
+            { id: uuidv4(), value: 'Task 8', done: false },
+            { id: uuidv4(), value: 'Task 9', done: false },
         ],
     },
     // {
@@ -150,15 +155,16 @@ export const taskReducer = (
                 return column;
             });
 
-        case BoardActions.TASK_REORDERED: {
-            const { column, currentColumn, currentTask, task } = action;
-
+        case BoardActions.DRAG_DROP: {
+            const { currentTask, currentColumn, column, task } = action;
+            // console.log('task', task);
+            // console.log('curr task', currentTask);
             const currentIndex = currentColumn.itemsList.indexOf(currentTask);
+            // console.log('curr index', currentIndex);
             currentColumn.itemsList.splice(currentIndex, 1);
-
             const dropIndex = column.itemsList.indexOf(task);
+            // console.log('dropIndex:', dropIndex);
             column.itemsList.splice(dropIndex + 1, 0, currentTask);
-
             return state.map((c) => {
                 if (c.id === column.id) {
                     return column;

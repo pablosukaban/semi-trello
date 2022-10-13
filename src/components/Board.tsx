@@ -3,7 +3,7 @@ import { Column } from './Column';
 import { BoardActions, initialTasks, taskReducer } from '../taskReducer';
 
 const Board = () => {
-    const [columnsArray, dispatch] = useReducer(taskReducer, initialTasks);
+    const [columnArray, dispatch] = useReducer(taskReducer, initialTasks);
 
     const handleAddColumn = () => {
         dispatch({ type: BoardActions.BOARD_ADDED });
@@ -18,7 +18,7 @@ const Board = () => {
             <button onClick={handleAddColumn}>Add</button>
             <button onClick={handleRemoveColumn}>Remove</button>
             <div className={'flex gap-1 justify-start items-start'}>
-                {columnsArray.map((item) => (
+                {columnArray.map((item) => (
                     <Column
                         key={item.id}
                         columnItem={item}

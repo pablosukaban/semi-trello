@@ -54,9 +54,6 @@ export const TitleComponent: React.FC<TitleComponentProps> = ({
         setVisible(false);
     };
 
-
-    // console.log('render in title component')
-
     return (
         <>
             {visible ? (
