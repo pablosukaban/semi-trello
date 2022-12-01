@@ -44,12 +44,10 @@ type ChangeTitleAction = {
 
 type DragStartAction = {
     type: BoardActions.DRAG_DROP;
-    taskId: string;
-    columnId: string;
     currentColumn: ColumnType;
     currentTask: TaskType;
-    column: ColumnType;
     task: TaskType;
+    column: ColumnType;
 };
 
 export type BoardActionTypes =
@@ -156,19 +154,16 @@ export const taskReducer = (
             });
 
         case BoardActions.DRAG_DROP: {
-            const { currentTask, currentColumn, column, task } = action;
-            // console.log('task', task);
-            // console.log('curr task', currentTask);
+            const { currentTask, currentColumn, task, column } = action;
+
+            if (currentColumn.id !== column.id) return state;
+
             const currentIndex = currentColumn.itemsList.indexOf(currentTask);
-            // console.log('curr index', currentIndex);
             currentColumn.itemsList.splice(currentIndex, 1);
-            const dropIndex = column.itemsList.indexOf(task);
-            // console.log('dropIndex:', dropIndex);
-            column.itemsList.splice(dropIndex + 1, 0, currentTask);
+            const dropIndex = currentColumn.itemsList.indexOf(task);
+            currentColumn.itemsList.splice(dropIndex + 1, 0, currentTask);
+
             return state.map((c) => {
-                if (c.id === column.id) {
-                    return column;
-                }
                 if (c.id === currentColumn.id) {
                     return currentColumn;
                 }

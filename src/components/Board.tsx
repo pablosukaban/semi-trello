@@ -18,13 +18,15 @@ const Board = () => {
             <button onClick={handleAddColumn}>Add</button>
             <button onClick={handleRemoveColumn}>Remove</button>
             <div className={'flex gap-1 justify-start items-start'}>
-                {columnArray.map((item) => (
-                    <Column
-                        key={item.id}
-                        columnItem={item}
-                        dispatch={dispatch}
-                    />
-                ))}
+                {/*{columnArray.map((item) => (*/}
+                {/*    <Column*/}
+                {/*        key={item.id}*/}
+                {/*        columnItem={item}*/}
+                {/*        dispatch={dispatch}*/}
+                {/*    />*/}
+                {/*))}*/}
+                <Column columnItem={columnArray[0]} dispatch={dispatch} />
+                <Column columnItem={columnArray[1]} dispatch={dispatch} />
             </div>
         </div>
     );

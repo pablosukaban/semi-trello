@@ -4,7 +4,6 @@ import { TaskComponent } from './TaskComponent';
 import { TaskType } from './Column';
 
 type TaskListComponentProps = {
-    columnArray: ColumnType[];
     columnItem: ColumnType;
     dispatch: (action: BoardActionTypes) => void;
 };
@@ -22,8 +21,7 @@ export const TaskListComponent: React.FC<TaskListComponentProps> = ({
     );
 
     const handleClick = (task: TaskType, column: ColumnType) => {
-        setCurrentColumn(column);
-        setCurrentTask(task);
+        const a = 0;
     };
 
     const handelTaskSetDone = (id: string) => {
@@ -35,8 +33,8 @@ export const TaskListComponent: React.FC<TaskListComponentProps> = ({
     };
 
     const handleDragStart = (task: TaskType, column: ColumnType) => {
-        console.log('task from drag start', task);
-        console.log('column from drag start', column);
+        setCurrentColumn(column);
+        setCurrentTask(task);
     };
 
     const handleDragOver = (e: React.DragEvent) => {
@@ -68,8 +66,6 @@ export const TaskListComponent: React.FC<TaskListComponentProps> = ({
         if (!currentTask || !currentColumn) return;
         dispatch({
             type: BoardActions.DRAG_DROP,
-            taskId: task.id,
-            columnId: column.id,
             currentColumn: currentColumn,
             currentTask: currentTask,
             task: task,
